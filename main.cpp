@@ -1,59 +1,102 @@
-#include "detective.h"
+#include "detective.h" // Include the detective class header
+#include "ll.h"        // Include the LL class header
+#include "queue.h"     // Include the queue class header
+
 #include <iostream>
 using namespace std;
 
+// Display menu
+void menu(void) {
+  cout << " [ 1 ] Register as a detective" << endl;       // Create instance
+  cout << " [ 2 ] Make reservation (for client)" << endl; // enqueue
+  cout << " [ 3 ] Finish investigation (for detective)" << endl; // dequeue
+  cout << " [ 4 ] Display queue" << endl;                        // Print queue
+  cout << " [ 5 ] Display detective rank" << endl;               // Print LL
+  cout << " [ 6 ] Resign (for detective)" << endl;
+  cout << " [ 7 ] Exit" << endl;
+
+  printf("\n");
+}
+
 int main() {
-    const int numDetectives = 5;
+  Queue q;
+  LL l;
+  unsigned int choice;
 
-    Detective* detectives[numDetectives];
-    detectives[0] = new Detective("Sherlock Holmes", "Human", 45);
-    detectives[1] = new Detective(); // Using default constructor
-    detectives[2] = new Detective("Cristiano Ronaldo", "Goat", 38);
-    detectives[3] = new Detective("Batman", "Human", 35);
-    detectives[4] = new Detective("Scooby-Doo", "Dog", 7);
+  // Case 1
+  string nm, sp;
+  int ex;
+  // Case 2
+  string nm2, target_name;
+  // Case 6
+  string nm6;
 
-    Detective* detectivePtr = new Detective("Freaky Franco", "Frog", 9);
+  cout << "Hello! We are the IDA, \n"
+          "Intergalactic Detectives Agency. \n"
+          "What service can we offer you? \n"
+          ""
+       << endl;
 
-    cout << endl;
-    detectives[0]->print();
-    detectives[1]->print();
-    detectives[2]->print();
-    detectives[3]->print();
-    detectives[4]->print();
-    detectivePtr->print();
+  menu(); // display menu
 
-    cout << endl;
-    detectives[0]->changePartner(detectives[1]);
-    detectives[0]->addNumCase();
-    detectives[1]->addNumCase();
+  cout << ">> ";
+  cin >> choice;
 
-    detectives[0]->print();
-    detectives[1]->print();
+  while (choice != 7) {
 
-    cout << endl;
-    ++(*detectives[0]);
-    --(*detectives[1]);
+    switch (choice) {
+    case 1: // Register as a detective
+      cout << "Input in this format: " << endl;
+      cout << "*name* *specie* *experience*" << endl;
+      printf("\n");
+      cout << ">> ";
+      cin >> nm >> sp >> ex; // name specie experience
+      l.insert(nm, sp, ex);
+      printf("\n");
+      l.printList();
+      break;
 
-    detectives[0]->print();
-    detectives[1]->print();
+    case 2: // Make reservation (for client)
+      cout << "Input in this format: " << endl;
+      cout << "*Target name* *Detective name*" << endl;
+      printf("\n");
+      cout << ">> ";
+      cin >> target_name >> nm2;
+      q.enqueue(target_name, l.search(nm2));
+      break;
 
-    cout << endl;
-    Detective* moreExperienced = detectives[0]->moreExp(detectives[1]);
-    cout << "Detective with more experience: " << moreExperienced->getName() << endl;
+    case 3: // Finish investigation (for detective)
+      
+      q.dequeue();
+      break;
 
-    cout << endl;
-    detectives[0]->bubbleSort(detectives, numDetectives);
+    case 4: // Display queue
+      q.printQueue();
+      break;
 
-    cout << "Sorted Detectives by Experience:" << endl;
-    for (int i = 0; i < numDetectives; i++) {
-        detectives[i]->print();
+    case 5: // Display detective rank
+      l.printList();
+      break;
+
+    case 6: // Resign (for detective)
+      cout << "Please say your name" << endl;
+      printf("\n");
+      cout << ">> ";
+      cin >> nm6;
+      l.deletes(nm6);
+      break;
+
+    default:
+      cout << "Invalid choice." << endl;
+      menu();
+      break;
     }
 
-    // Cleanup
-    for (int i = 0; i < numDetectives; i++) {
-        delete detectives[i];
-    }
-    delete detectivePtr;
+    printf("\n");
+    menu();
+    cout << ">> ";
+    cin >> choice;
+  }
 
-    return 0;
+  return 0;
 }
